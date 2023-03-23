@@ -78,7 +78,7 @@ def read_from_s3(key, path=""):
     Rss_files_v2/dba35/1678980104.8269575.xml
     """
     print(f"\t downloading file: {key}")
-    obj = s3.Object(bucket_name, key)
+    obj = bucket.Object(key)
     data = obj.get()['Body'].read().decode('utf-8')
 
     if path:
@@ -135,7 +135,7 @@ def writing_to_s3_custom(key):
         'Bucket': bucket_name,
         'Key': key
     }
-    s3.Object(bucket_name, new_key).copy(copy_source)
+    bucket.Object(new_key).copy_from(CopySource=copy_source)
 
     print(f"Wrote to s3 bucket: {bucket_name}, from Old_Key: {key}, to New_Key: {new_key}")
 
