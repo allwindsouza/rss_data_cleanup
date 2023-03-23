@@ -13,7 +13,7 @@ def main():
     updates = False
 
     if not updates:
-        all_pubs_dict = read_dict('/home/allwind/Desktop/CAS/rss_data_cleanup/aws_s3/file_content')
+        all_pubs_dict = read_dict('file_content')
 
     else:
         # all_pubs_dict contains all pub_ids along with all the keys in that folder
