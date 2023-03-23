@@ -17,7 +17,7 @@ from xml_diff import compare_xml_files
 
 
 session = boto3.Session(profile_name="s3-access-role")
-s3 = session.client("s3")
+s3_client = session.client("s3")
 
 bucket_name = "pub-rss-feed-store"
 
@@ -27,7 +27,8 @@ def get_all_folders_and_files(write_to_path=False):
     """
     folders = {}
     folder_name = 'Rss_files_v2/'
-    objects = s3.Bucket(bucket_name).objects.filter(Prefix=folder_name)
+    # objects = s3.Bucket(bucket_name).objects.filter(Prefix=folder_name)
+    objects = s3_client.list_objects(Bucket=bucket_name, Prefix=folder_name)['Contents']
 
     print("sorting the objects")
     sorted_objects = objects
