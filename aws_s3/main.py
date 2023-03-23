@@ -14,6 +14,18 @@ def main():
 
     if not updates:
         all_pubs_dict = read_dict('file_content')
+        new_dict = {}
+
+        i = 0
+        print("Doing manipulation")
+        for k in all_pubs_dict:
+            new_dict[k] = all_pubs_dict[k]
+            i += 1
+
+            if i == 5:
+                break
+
+        all_pubs_dict = new_dict
 
     else:
         # all_pubs_dict contains all pub_ids along with all the keys in that folder
@@ -46,7 +58,7 @@ def main():
     print("--------------------------------------------------------")
 
     for pub in custom_pub_dict:
-        for key in pub[custom_pub_dict]:
+        for key in custom_pub_dict[pub]:
             writing_to_s3_custom(key)
 
     print("******************************************************")
