@@ -5,7 +5,7 @@ from xml_util import compare_xml_files
 from xml_diff import compare_xml_files
 
 
-local = True
+local = False
 
 bucket_name = "pub-rss-feed-store"
 
