@@ -27,7 +27,7 @@ if local:
     bucket = s3.Bucket(bucket_name)
 
 else:
-    session = boto3.Session(profile_name="s3-access-role")
+    session = boto3.Session(profile_name="user")
     s3_resource = session.resource('s3')
 
     bucket = s3_resource.Bucket(bucket_name)
