@@ -20,7 +20,8 @@ def elements_equal(elem1, elem2):
             if elem1.attrib[key] != elem2.attrib.get(key):
                 return False
         return True
-    except:
+    except Exception as e:
+        print(f"Exception in compare elements, {e}")
         return False
 
 

@@ -2,19 +2,11 @@
 Listing all files folder wise, in last modified order.
 """
 
-import time
-import shutil
-import sys
-from tempfile import NamedTemporaryFile
-import logging
-import datetime
 import boto3
-import hashlib
-from pytz import timezone
 import configparser
 import ast
-from xml_util import compare_xml_files
-from xml_diff import compare_xml_files
+import xml_util
+import xml_diff
 
 config = configparser.ConfigParser()
 config.read('/home/allwind/Desktop/CAS/rss_data_cleanup/aws_s3/config.ini')
@@ -67,8 +59,6 @@ def read_dict(path):
     return data
 
 
-# for key in dict_data['dba35']:
-#     print(key)
 
 def read_from_s3(key, path=""):
     """
@@ -87,19 +77,16 @@ def read_from_s3(key, path=""):
     return data
 
 
-result_list = []
-
-
 def check_algo(pub_list: list):
     if len(pub_list) <= 10:
         return
 
     i = 0
     j = 1
-
+    result_list = []
     while j < len(pub_list):
         print(f"Checking {pub_list[i]} and {pub_list[j]}")
-        if compare_xml_files(read_from_s3(pub_list[i]), read_from_s3(pub_list[j])):
+        if xml_util.compare_xml_files(read_from_s3(pub_list[i]), read_from_s3(pub_list[j])):
             j += 1
             print("Almost same file")
         else:
@@ -142,26 +129,5 @@ def writing_to_s3_custom(key):
     print(f"Wrote to s3 bucket: {bucket_name}, from Old_Key: {key}, to New_Key: {new_key}")
 
 
-# writing_to_s3_custom("Rss_files_v2/03eeb/1673600572.2009602.xml")
 
 
-
-
-# dict_data = read_dict('file_content')
-#
-# check_algo(dict_data['dba35'][:20])
-
-
-# print(read_from_s3("Rss_files_v2/dba35/1674296068.987057.xml"))
-
-# ------------------------------
-# data_1 = read_from_s3("Rss_files_v2/86918/1673600864.2579598.xml",
-#                       "/home/allwind/Desktop/CAS/rss_data_cleanup/resource/file_01.xml")
-# data_2 = read_from_s3("Rss_files_v2/86918/1673607676.431338.xml",
-#                       "/home/allwind/Desktop/CAS/rss_data_cleanup/resource/file_02.xml")
-#
-# print("Output")
-# try:
-#     print(compare_xml_files(data_1, data_2))
-# except Exception as e:
-#     print(f"Exce : {e}")

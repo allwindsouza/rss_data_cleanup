@@ -75,8 +75,3 @@ print(result)
 with open('main_results', 'w') as file:
     file.write(str(result))
 
-# all_pubs_dict = read_dict('/home/allwind/Desktop/CAS/rss_data_cleanup/aws_s3/file_content')
-#
-# x = all_pubs_dict['03eeb'][:12]
-#
-# print(check_algo(x))
