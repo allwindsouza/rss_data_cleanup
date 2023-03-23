@@ -4,9 +4,11 @@ import ast
 from xml_util import compare_xml_files
 from xml_diff import compare_xml_files
 import os
+import socket
 
 def is_not_aws():
-    if 'AWS_REGION' in os.environ:
+    hostname = socket.gethostname()
+    if 'amazonaws.com' in hostname:
         return False
     else:
         return True
