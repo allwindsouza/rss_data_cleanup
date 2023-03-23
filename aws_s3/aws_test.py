@@ -5,13 +5,13 @@ from xml_util import compare_xml_files
 from xml_diff import compare_xml_files
 import os
 
-def is_aws():
+def is_not_aws():
     if 'AWS_REGION' in os.environ:
-        return True
-    else:
         return False
+    else:
+        return True
 
-local = is_aws()
+local = is_not_aws()
 
 bucket_name = "pub-rss-feed-store"
 
