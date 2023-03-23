@@ -4,23 +4,30 @@ import ast
 from xml_util import compare_xml_files
 from xml_diff import compare_xml_files
 
-# config = configparser.ConfigParser()
-# config.read('/home/allwind/Desktop/CAS/rss_data_cleanup/aws_s3/config.ini')
-#
-# access_key = config['AWS']['aws_access_key_id']
-# secret_key = config['AWS']['aws_secret_access_key']
-# session_token = config['AWS']['aws_session_token']
-#
-# s3 = boto3.resource('s3', aws_access_key_id=access_key,
-#                     aws_secret_access_key=secret_key,
-#                     aws_session_token=session_token)
 
-
-session = boto3.Session(profile_name="s3-access-role")
-s3_resource = session.resource('s3')
+local = True
 
 bucket_name = "pub-rss-feed-store"
-bucket = s3_resource.Bucket(bucket_name)
+
+if local:
+    config = configparser.ConfigParser()
+    config.read('/home/allwind/Desktop/CAS/rss_data_cleanup/aws_s3/config.ini')
+
+    access_key = config['AWS']['aws_access_key_id']
+    secret_key = config['AWS']['aws_secret_access_key']
+    session_token = config['AWS']['aws_session_token']
+
+    s3 = boto3.resource('s3', aws_access_key_id=access_key,
+                        aws_secret_access_key=secret_key,
+                        aws_session_token=session_token)
+
+    bucket = s3.Bucket(bucket_name)
+
+else:
+    session = boto3.Session(profile_name="s3-access-role")
+    s3_resource = session.resource('s3')
+
+    bucket = s3_resource.Bucket(bucket_name)
 
 def get_all_folders_and_files(write_to_path=False):
     """
@@ -29,7 +36,6 @@ def get_all_folders_and_files(write_to_path=False):
     folders = {}
     folder_name = 'Rss_files_v2/'
     objects = bucket.objects.filter(Prefix=folder_name)
-    # objects = s3_client.list_objects(Bucket=bucket_name, Prefix=folder_name)['Contents']
 
     print("sorting the objects")
     sorted_objects = objects
