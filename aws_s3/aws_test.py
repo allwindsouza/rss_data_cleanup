@@ -7,7 +7,7 @@ import os
 import socket
 
 
-local = True
+local = False
 
 bucket_name = "pub-rss-feed-store"
 
