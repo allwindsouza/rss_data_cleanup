@@ -5,14 +5,14 @@ Main file that does the whole process
 from listing_all_files import *
 
 bucket_name = "pub-rss-feed-store"
-local = True
 
 
 def main():
     # New dict that contains new pub dict with only unique files
     custom_pub_dict = {}
+    updates = False
 
-    if local:
+    if not updates:
         all_pubs_dict = read_dict('/home/allwind/Desktop/CAS/rss_data_cleanup/aws_s3/file_content')
 
     else:

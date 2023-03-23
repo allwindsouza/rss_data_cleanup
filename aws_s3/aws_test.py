@@ -6,14 +6,8 @@ from xml_diff import compare_xml_files
 import os
 import socket
 
-def is_not_aws():
-    hostname = socket.gethostname()
-    if 'amazonaws.com' in hostname:
-        return False
-    else:
-        return True
 
-local = is_not_aws()
+local = True
 
 bucket_name = "pub-rss-feed-store"
 
