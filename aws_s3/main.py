@@ -4,17 +4,6 @@ Main file that does the whole process
 
 from listing_all_files import *
 
-config = configparser.ConfigParser()
-config.read('config.ini')
-
-access_key = config['AWS']['aws_access_key_id']
-secret_key = config['AWS']['aws_secret_access_key']
-session_token = config['AWS']['aws_session_token']
-
-s3 = boto3.resource('s3', aws_access_key_id=access_key,
-                    aws_secret_access_key=secret_key,
-                    aws_session_token=session_token)
-
 bucket_name = "pub-rss-feed-store"
 local = True
 
