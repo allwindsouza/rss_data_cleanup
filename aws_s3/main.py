@@ -2,23 +2,10 @@
 Main file that does the whole process
 """
 
-import time
-import shutil
-import sys
-from tempfile import NamedTemporaryFile
-import logging
-import datetime
-import boto3
-import hashlib
-from pytz import timezone
-import configparser
-import ast
-from xml_util import compare_xml_files
-from xml_diff import compare_xml_files
 from listing_all_files import *
 
 config = configparser.ConfigParser()
-config.read('/home/allwind/Desktop/CAS/Rss_collector/aws_s3/config.ini')
+config.read('config.ini')
 
 access_key = config['AWS']['aws_access_key_id']
 secret_key = config['AWS']['aws_secret_access_key']
@@ -49,7 +36,7 @@ def main():
     for pub in all_pubs_dict:
         print("Starting Iteration")
         # If any of the publisher folder contains more than 100 files, process only that file.
-        if len(all_pubs_dict[pub]) >= 100:
+        if len(all_pubs_dict[pub]) >= 25:
             print(f"Starting to process for {pub} with length {len(all_pubs_dict[pub])}")
             new_files = check_algo(all_pubs_dict[pub][:12])  # remove the [:12] part
 
@@ -66,8 +53,17 @@ def main():
             print("**************************************")
 
     print("--------------------------------------------------------")
-    print("process complete")
+    print("Completed Making new Pub Rss bucket")
     print("--------------------------------------------------------")
+
+    for pub in custom_pub_dict:
+        for key in pub[custom_pub_dict]:
+            writing_to_s3_custom(key)
+
+    print("******************************************************")
+    print("Completed copying new files to new folder")
+    print("******************************************************")
+
     return custom_pub_dict
 
 

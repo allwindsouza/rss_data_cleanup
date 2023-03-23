@@ -24,5 +24,5 @@ with open(path, 'r') as file:
         hash_last = hashlib.sha256(row[0].encode()).hexdigest()[56:64]
         hash_dict[hash_first_5] = hash_last
 
-print(hash_dict)
+# print(hash_dict)
 

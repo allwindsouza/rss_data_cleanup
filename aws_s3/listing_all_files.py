@@ -17,7 +17,7 @@ from xml_util import compare_xml_files
 from xml_diff import compare_xml_files
 
 config = configparser.ConfigParser()
-config.read('/home/allwind/Desktop/CAS/Rss_collector/aws_s3/config.ini')
+config.read('/home/allwind/Desktop/CAS/rss_data_cleanup/aws_s3/config.ini')
 
 access_key = config['AWS']['aws_access_key_id']
 secret_key = config['AWS']['aws_secret_access_key']
@@ -118,11 +118,12 @@ def check_algo(pub_list: list):
     return result_list
 
 
-def writing_to_s3_custom(data, key):
+def writing_to_s3_custom(key):
     """
     sample inp: data, Rss_files_v2/86918/1673600864.2579598.xml
     """
-    print(key)
+    print(f"Old key: {key}")
+
     from hash_store import hash_dict
     keys = key.split("/")
     old_hash = keys[1]
@@ -130,21 +131,20 @@ def writing_to_s3_custom(data, key):
 
     new_hash = hash_dict.get(old_hash, old_hash)
 
-    key = f"Rss_v3/{new_hash}/{file_name}"
+    new_key = f"Rss_v3/{new_hash}/{file_name}"
 
-    temp_file_name = "temp_file.txt"
+    copy_source = {
+        'Bucket': bucket_name,
+        'Key': key
+    }
+    s3.Object(bucket_name, new_key).copy(copy_source)
 
-    with open(temp_file_name, 'w') as new_file:
-        new_file.write(data)
-        print("\t Writing to file: {}.".format(key))
-
-    # s3.upload_file(Filename=temp_file_name, Bucket=bucket_name, Key=key)
-    print(f"Wrote to s3 bucket: {bucket_name}, Key: {key}")
-
+    print(f"Wrote to s3 bucket: {bucket_name}, from Old_Key: {key}, to New_Key: {new_key}")
 
 
+# writing_to_s3_custom("Rss_files_v2/03eeb/1673600572.2009602.xml")
 
-writing_to_s3_custom("data", "Rss_files_v2/03eeb/1673600864.2579598.xml")
+
 
 
 # dict_data = read_dict('file_content')
