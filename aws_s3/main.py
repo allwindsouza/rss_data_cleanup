@@ -14,18 +14,18 @@ def main():
 
     if not updates:
         all_pubs_dict = read_dict('file_content')
+
         new_dict = {}
-
-        i = 0
-        print("Doing manipulation")
-        for k in all_pubs_dict:
-            new_dict[k] = all_pubs_dict[k]
-            i += 1
-
-            if i == 5:
-                break
-
-        all_pubs_dict = new_dict
+        # i = 0
+        # print("Doing manipulation")
+        # for k in all_pubs_dict:
+        #     new_dict[k] = all_pubs_dict[k]
+        #     i += 1
+        #
+        #     if i == 5:
+        #         break
+        #
+        # all_pubs_dict = new_dict
 
     else:
         # all_pubs_dict contains all pub_ids along with all the keys in that folder
@@ -39,7 +39,7 @@ def main():
         # If any of the publisher folder contains more than 100 files, process only that file.
         if len(all_pubs_dict[pub]) >= 25:
             print(f"Starting to process for {pub} with length {len(all_pubs_dict[pub])}")
-            new_files = check_algo(all_pubs_dict[pub][:12])  # remove the [:12] part
+            new_files = check_algo(all_pubs_dict[pub])  # remove the [:12] part
 
             print(f"Got custom files list for : {pub} with length {len(new_files)}")
             custom_pub_dict[pub] = new_files
@@ -59,7 +59,10 @@ def main():
 
     for pub in custom_pub_dict:
         for key in custom_pub_dict[pub]:
-            writing_to_s3_custom(key)
+            try:
+                writing_to_s3_custom(key)
+            except Exception as e:
+                print(f"EXCEPTIOn for {key}: {e}")
 
     print("******************************************************")
     print("Completed copying new files to new folder")
