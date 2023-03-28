@@ -8,7 +8,7 @@ import ast
 import xml_util
 import xml_diff
 
-local = False
+local = True
 
 bucket_name = "pub-rss-feed-store"
 
@@ -38,7 +38,7 @@ def get_all_folders_and_files(write_to_path=False):
     Returns a dictionary that gives keys of all files in each of the rss folders.
     """
     folders = {}
-    folder_name = 'Rss_files_v2/'
+    folder_name = 'Rss_v3/'
     objects = bucket.objects.filter(Prefix=folder_name)
 
     print("sorting the objects")
@@ -57,7 +57,7 @@ def get_all_folders_and_files(write_to_path=False):
                 folders[k_split[1]] = [k]
 
     if write_to_path:
-        with open('file_content', 'w') as file:
+        with open('file_content_v3', 'w') as file:
             file.write(str(folders))
 
     return folders
@@ -122,12 +122,12 @@ def writing_to_s3_custom(key):
     """
     print(f"Old key: {key}")
 
-    from hash_store import hash_dict
+    from hash_store import hash_store_v2
     keys = key.split("/")
     old_hash = keys[1]
     file_name = keys[2]
 
-    new_hash = hash_dict.get(old_hash, old_hash)
+    new_hash = hash_store_v2.get(old_hash, old_hash)
 
     new_key = f"Rss_v3/{new_hash}/{file_name}"
 
@@ -141,4 +141,19 @@ def writing_to_s3_custom(key):
 
 
 
+# get_all_folders_and_files(True)
 
+path_1 = "/home/allwind/Desktop/CAS/rss_data_cleanup/resource/file_01.xml"
+path_2 = "/home/allwind/Desktop/CAS/rss_data_cleanup/resource/file_02.xml"
+
+data_1 = read_from_s3('Rss_v3/ec9754f9/1673600573.5898323.xml', path_1)
+data_2 = read_from_s3('Rss_v3/ec9754f9/1673600948.218719.xml', path_2)
+
+# import xml_diff
+#
+# a = xml_diff.compare_xml_files(data_1, data_2)
+#
+# # b = xml_util.compare_xml_files(data_1, data_2)
+#
+# # print(b)
+# print(len(a))
