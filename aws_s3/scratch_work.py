@@ -8,7 +8,7 @@ import ast
 import xml_util
 import xml_diff
 
-local = True
+local = False
 
 bucket_name = "pub-rss-feed-store"
 
