@@ -8,7 +8,7 @@ import ast
 import xml_util
 import xml_diff
 
-local = False
+local = True
 
 bucket_name = "pub-rss-feed-store"
 
@@ -86,7 +86,7 @@ def change_all():
     print(folders)
 
 
-change_all()
+# change_all()
 
 # def read_dict(path):
 #     with open(path, 'r') as file:
@@ -97,3 +97,22 @@ change_all()
 # dict_data = read_dict('file_content')
 #
 # print(dict_data.keys())
+
+def get_all_folder():
+    folders = set()
+    folder_prefix = "Rss_v3/"
+    objects = bucket.objects.filter(Prefix=folder_prefix)
+    x = 208005
+    print(f"Length of objects: {x}")
+    count = 0
+    for obj in objects:
+        key = obj.key
+        folder_name = key.split("/")[1]
+        folders.add(folder_name)
+        print(round((count/x)*100, 1), " %")
+        count += 1
+
+    print(folders)
+
+# get_all_folder()
+

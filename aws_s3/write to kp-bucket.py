@@ -21,13 +21,16 @@ if local:
                         aws_secret_access_key=secret_key,
                         aws_session_token=session_token)
 
-    bucket = s3.Bucket(new_bucket_name)
+    new_bucket = s3.Bucket(new_bucket_name)
+    old_bucket = s3.Bucket(old_bucket_name)
 
 else:
     session = boto3.Session(profile_name="user")
     s3_resource = session.resource('s3')
 
-    bucket = s3_resource.Bucket(new_bucket_name)
+    new_bucket = s3_resource.Bucket(new_bucket_name)
+    old_bucket = s3_resource.Bucket(old_bucket_name)
+
 
 
 def writing_to_s3_custom(key):
@@ -47,7 +50,7 @@ def writing_to_s3_custom(key):
         'Bucket': old_bucket_name,
         'Key': key
     }
-    bucket.Object(new_key).copy_from(CopySource=copy_source)
+    new_bucket.Object(new_key).copy_from(CopySource=copy_source)
 
     print(f"Wrote to s3 bucket: {old_bucket_name}, from Old_Key: {key}, to New_Key: {new_key}, "
           f"new_bucket: {new_bucket_name}")
@@ -61,19 +64,22 @@ def read_dict(path):
 
 
 def copy_only_x(x=15, folders=None):
-
     if folders is None:
         folders = []
 
     for folder in folders:
+        print(f"-------------Processing for {folder}----------------")
         counter = 0
-        for obj in bucket.objects.filter(Prefix=f"Rss_v3/{folder}/"):
+
+        for obj in old_bucket.objects.filter(Prefix=f"Rss_v3/{folder}/"):
             key = obj.key
+            print(f"\t Doing for {key}")
             writing_to_s3_custom(key)
             counter += 1
-            if counter > x-1:
+            if counter > x - 1:
                 break
+        print(f"----------------Completed for {folder}---------------")
 
+from hash_store import pub_rss_folders
 
-copy_only_x() # give inputs and run this to populate kp bucket.
-
+# copy_only_x(15, pub_rss_folders)  # give inputs and run this to populate kp bucket.
